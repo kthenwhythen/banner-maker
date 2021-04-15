@@ -6,13 +6,10 @@ export const App = () => {
 	const [title, setTitle] = useState('Sample title')
 	const [colorBG, setColorBG] = useState('#0055ff')
 	const [colorFont, setColorFont] = useState('#fff')
-	const [json, setJson] = useState('json')
-	const [jsx, setJsx] = useState('jsx')
 
 	useEffect(() => {
 		const canvas = document.getElementById('canvas')
 		const context = canvas.getContext('2d')
-		// const ctx = document.getElementById('canvas').getContext('2d')
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		const img = new Image()
 		img.onload = () => {
@@ -29,15 +26,27 @@ export const App = () => {
 		img.crossOrigin = 'Anonymous'
 
 		const genJson = () => {
-
+			const json = JSON.stringify({
+				imgUrl: imgUrl,
+				link: link,
+				title: title,
+				colorBG: colorBG,
+				colorFont: colorFont
+			});
+			const textarea = document.getElementById("json")
+			textarea.value = json
 		}
 
-		const genJsx = () => {
-			
+		const genHtml = () => {
+			const html = `<a href={link}><img src="banner.png" class="h-80 w-full rounded-md" /></a>`
+			const textarea = document.getElementById("jsx")
+			textarea.value = html
+			console.log(html)
+
 		}
 
 		genJson()
-		genJsx()
+		genHtml()
 	}, [imgUrl, title, colorBG, colorFont])
 
 	const handleSaveImage = () => {
@@ -50,19 +59,20 @@ export const App = () => {
 
 	const handleJSON = () => {
 		let textarea = document.getElementById("json")
-		textarea.value = 'json'
 		textarea.select()
 		document.execCommand("copy")
 	}
 
-	const handleJSX = () => {
-
+	const handleHTML = () => {
+		let textarea = document.getElementById("jsx")
+		textarea.select()
+		document.execCommand("copy")
 	}
-	
+
 	return (
 		<div className="container px-3 mx-auto flex justify-center">
 			<div className="py-12">
-				<div className="mb-6">
+				<div id="banner" className="mb-6">
 					<a href={link}>
 						<canvas id="canvas" className="h-80 w-full rounded-md" />
 					</a>
@@ -73,15 +83,14 @@ export const App = () => {
 				<input className="h-8 w-full px-3 rounded-md mb-3" onChange={e => setColorBG(e.target.value)} placeholder="Color Background ('red' or #420420)" />
 				<input className="h-8 w-full px-3 rounded-md mb-3" onChange={e => setColorFont(e.target.value)} placeholder="Color Font ('blue' or #fff)" />
 				<div className="flex justify-center mb-6">
-					<textarea id="json" className="p-3 text-gray-500 resize-none bg-gray-300 w-full mr-6 rounded-md" readOnly>JSON</textarea>
-					<textarea id="jsx" className="p-3 text-gray-500 resize-none bg-gray-300 w-full rounded-md" readOnly>JSX</textarea>
+					<textarea id="json" className="p-3 h-40 text-gray-500 resize-none bg-gray-300 w-full mr-6 rounded-md" readOnly defaultValue="JSON"></textarea>
+					<textarea id="jsx" className="p-3 h-40 text-gray-500 resize-none bg-gray-300 w-full rounded-md" readOnly defaultValue="JSX"></textarea>
 				</div>
 				<div className="flex justify-center">
 					<button className="w-36 h-8 rounded bg-gray-700 text-white px-6" onClick={handleSaveImage}>Save PNG</button>
-					<button className="w-36 h-8 rounded bg-gray-700 text-white px-6 mx-12" onClick={handleJSX}>Copy JSX</button>
-					<button className="w-36 h-8 rounded bg-gray-700 text-white px-6" onClick={handleJSON}>Copy JSON</button>
+					<button className="w-36 h-8 rounded bg-gray-700 text-white px-6 mx-12" onClick={handleJSON}>Copy JSON</button>
+					<button className="w-36 h-8 rounded bg-gray-700 text-white px-6" onClick={handleHTML}>Copy HTML</button>
 				</div>
-
 			</div>
 		</div>
 	)
